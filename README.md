@@ -2,11 +2,11 @@
 
 > Работает через [Reflection](https://www.php.net/manual/ru/book.reflection.php)
 
-Легковесное создание распределение параметров запроса в существующие DTO.
+Легковесное создание распределения параметров запроса в существующие DTO.
 
 ## Установка
 
-* Добавить в `composer.json` текущий репозиторий.
+* Добавить в `composer.json` ["текущий"](https://github.com/Lavreek/Symfony.RequestReceiver) репозиторий.
 
 ```json
 {
@@ -23,7 +23,7 @@
 
 ## Использование
 
-Использование тестировалось только в фреймворке Symfony 6, 7.
+Использование тестировалось только в фреймворке `Symfony` 6, 7.
 
 ### Создание Request DTO 
 
@@ -37,9 +37,7 @@
 }
 ```
 
-Передаваемые параметры поддерживают древо при условии, что все элементы наследуются от одинакового родителя.
-
-TestRequest.php:
+* TestRequest.php:
 
 ```php
 <?php
@@ -57,6 +55,8 @@ class TestRequest extends RequestReceive
     public string $token;
 }
 ```
+
+* ApiController.php:
 
 ```php
 <?php
@@ -83,7 +83,7 @@ final class ApiController extends AbstractController
 
 ```json
 {
-    "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjIsImlhdCI6MTc2OTczMDE2MX0.ZDQ0YmZiODYzYThhYjI0NjlmOTRiYTJjZTU4YjZjYmIxYTljZThhMTE3MTVhYWQ1MGJkOTUyYzNiZGJjYTU5Yw",
+    "token": "eyJ.eyJ.ZDQ",
     "meta": {
         "name": "name",
         "address": {
@@ -95,7 +95,7 @@ final class ApiController extends AbstractController
 
 При текущей структуре все последующие объекты в `RequestReceive` должны будут иметь зависимость от `VariableReceive`.
 
-Повтор TestRequest.php:
+* Повтор TestRequest.php: (Уровень 1)
 
 ```php
 <?php
@@ -115,10 +115,9 @@ class TestRequest extends RequestReceive
     /** @var MetaRequest Метаданные пользователя. */
     public MetaRequest $meta;
 }
-
 ```
 
-MetaRequest.php:
+* MetaRequest.php: (Уровень 2)
 
 ```php
 <?php
@@ -128,7 +127,7 @@ namespace App\DTO;
 use LAVREEK\Request\Library\VariableReceive;
 
 /**
- * Запрос параметров необходимых для валидации токена.
+ * Запрос параметров необходимых для валидации метаданных.
  */
 class MetaRequest extends VariableReceive
 {
@@ -141,10 +140,9 @@ class MetaRequest extends VariableReceive
     /** @var AddressRequest Адрес пользователя */
     public AddressRequest $address;
 }
-
 ```
 
-AddressRequest.php:
+* AddressRequest.php: (Уровень 3)
 
 ```php
 <?php
@@ -164,18 +162,18 @@ class AddressRequest extends VariableReceive
     /** @var null|string Фактический адрес. */
     public ?string $fact_address = null;
 }
-
 ```
 
 #### Использование метода toArray()
 
-При использовании метода toArray от экземпяра `RequestReceive` можно получить весь объект в виде массива.
+При использовании метода toArray от экземпяра `RequestReceive` можно получить весь объект в виде массива. 
+Нулевые свойства будут добавлены в результирующий массив для дальнейшей валидации.
 
-Пример ответа dd():
+* Пример ответа `dd()`:
 
 ```php
 array:2 [
-  "token" => "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjIsImlhdCI6MTc2OTczMDE2MX0.ZDQ0YmZiODYzYThhYjI0NjlmOTRiYTJjZTU4YjZjYmIxYTljZThhMTE3MTVhYWQ1MGJkOTUyYzNiZGJjYTU5Yw"
+  "token" => "eyJ.eyJ.ZDQ"
   "meta" => array:3 [
     "name" => "name"
     "surname" => null
@@ -186,3 +184,20 @@ array:2 [
   ]
 ]
 ```
+
+### Отличие RequestReceive от VariableReceive
+
+#### RequestReceive
+
+Создаёт экземпляр Request из глобальных параметров. Используя эти параметры от создаёт VariableReceive. Т.е. он берёт 
+параметры запроса, которые пришли в тело Request и передаёт в VariableReceive.
+
+#### VariableReceive
+
+Распределяет параметры полученные посредством создания экземпляра. Используя распаковку массива он проверяет все 
+параметры, которые получил на входе.
+
+<hr>
+
+Своё мнение по улучшению или по возникающим багам можно создать `issue` или передать сюда: 
+<a href="mailto:lavreeksolacki@yandex.ru">lavreeksolacki@yandex.ru</a>
