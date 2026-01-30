@@ -1,5 +1,13 @@
 {
-  "type": "project",
+  "name": "lavreek/request-receiver",
+  "authors": [
+    {
+      "name": "Михаил Иванов",
+      "email": "lavreeksolacki@yandex.ru",
+      "role": "Developer"
+    }
+  ],
+  "type": "library",
   "license": "proprietary",
   "minimum-stability": "stable",
   "prefer-stable": true,
