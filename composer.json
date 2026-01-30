@@ -1,0 +1,21 @@
+{
+  "type": "project",
+  "license": "proprietary",
+  "minimum-stability": "stable",
+  "prefer-stable": true,
+  "require": {
+    "php": ">=8.0"
+  },
+  "config": { },
+  "autoload": {
+    "psr-4": {
+      "LAVREEK\\Request\\Library\\": "src/"
+    }
+  },
+  "autoload-dev": { },
+  "replace": { },
+  "scripts": { },
+  "conflict": { },
+  "extra": { },
+  "require-dev": { }
+}
