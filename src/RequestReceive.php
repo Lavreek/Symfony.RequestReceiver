@@ -1,37 +1,26 @@
 <?php
 
-namespace LAVREEK\Request\Library;
+namespace LAVREEK\Library\Request;
 
-use Exception;
-use ReflectionException;
-use ReflectionProperty;
 use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Validator\Validation;
 
 /**
  * Класс взаимодействия с параметрами Symfony Request.
  */
 abstract class RequestReceive extends VariableReceive
 {
-    /** @var true Константа стандартной валидации параметров. */
-    const DEFAULT_VALIDATION = true;
-
     /** @var Request|null Экземпляр Request. */
     private ?Request $request = null;
 
     /**
      * Инициализация распределения параметров полученных через Request.
-     * @throws ReflectionException
-     * @throws Exception
+     * @throws \ReflectionException
+     * @throws \Exception
      */
     public function __construct()
     {
         parent::__construct(...$this->getRequestArray());
-
-        if ($this->isValid()) {
-            $this->validate(); // Провести стандартную валидацию данных.
-        }
     }
 
     /**
@@ -43,7 +32,6 @@ abstract class RequestReceive extends VariableReceive
         if ($this->request === null) {
             $this->request = Request::createFromGlobals();
         }
-
         return $this->request;
     }
 
@@ -66,64 +54,11 @@ abstract class RequestReceive extends VariableReceive
     }
 
     /**
-     * Произвести валидацию параметров дочернего класса с параметрами полученными из экземпляра Request.
-     * @throws Exception
-     */
-    private function validate(): void
-    {
-        $attributes = $this->getReflectionProperties();
-
-        foreach ($attributes as $attribute) {
-            if (!$this->checkAttributeRequirements($attribute)) {
-                throw new Exception(sprintf('Ошибка в валидации параметра: "%s"', $attribute->getName()));
-            }
-        }
-    }
-
-    /**
-     * Проверка атрибута свойства дочернего класса.
-     * @param ReflectionProperty $attribute Заданный атрибут.
-     * @return bool
-     */
-    private function checkAttributeRequirements(ReflectionProperty $attribute): bool
-    {
-        $attributeName = $attribute->getName();
-        $attributeValue = $this->$attributeName;
-
-        $attributeRequirements = $attribute->getAttributes();
-
-        if (empty($attributeRequirements)) {
-            return true;
-
-        } else {
-            foreach ($attributeRequirements as $requirement) {
-                $requirementName = $requirement->getName();
-
-                $violations = Validation::createValidator()->validate($attributeValue, new $requirementName());
-                if (count($violations) > 0) {
-                    return false;
-                }
-            }
-        }
-
-        return true;
-    }
-
-    /**
      * Получить данные полученные созданием экземпляра Request.
      * @return array
      */
     private function getRequestArray(): array
     {
         return $this->getRequest()->toArray();
-    }
-
-    /**
-     * Необходимость проверки валидации.
-     * @return bool
-     */
-    private function isValid(): bool
-    {
-        return self::DEFAULT_VALIDATION;
     }
 }

@@ -12,18 +12,13 @@
   "minimum-stability": "stable",
   "prefer-stable": true,
   "require": {
-    "php": ">=8.0"
+    "php": ">=8.0",
+    "symfony/http-foundation": "*",
+    "symfony/validator": "*"
   },
-  "config": { },
   "autoload": {
     "psr-4": {
-      "LAVREEK\\Request\\Library\\": "src/"
+      "LAVREEK\\Library\\Request\\": "src/"
     }
-  },
-  "autoload-dev": { },
-  "replace": { },
-  "scripts": { },
-  "conflict": { },
-  "extra": { },
-  "require-dev": { }
+  }
 }
