@@ -19,7 +19,7 @@
 }
 ```
 
-* Вызвать команду `composer require lavreek/request-receiver:dev-master`
+* Вызвать команду `composer require lavreek/request-receiver:1.0.0`
 
 ## Использование
 
@@ -44,7 +44,7 @@
 
 namespace App\DTO;
 
-use LAVREEK\Request\Library\RequestReceive;
+use LAVREEK\Library\Request\RequestReceive;
 
 /**
  * Запрос параметров необходимых для валидации токена.
@@ -102,7 +102,7 @@ final class ApiController extends AbstractController
 
 namespace App\DTO;
 
-use LAVREEK\Request\Library\RequestReceive;
+use LAVREEK\Library\Request\RequestReceive;
 
 /**
  * Запрос параметров необходимых для валидации токена.
@@ -124,7 +124,7 @@ class TestRequest extends RequestReceive
 
 namespace App\DTO;
 
-use LAVREEK\Request\Library\VariableReceive;
+use LAVREEK\Library\Request\VariableReceive;
 
 /**
  * Запрос параметров необходимых для валидации метаданных.
@@ -149,7 +149,7 @@ class MetaRequest extends VariableReceive
 
 namespace App\DTO;
 
-use LAVREEK\Request\Library\VariableReceive;
+use LAVREEK\Library\Request\VariableReceive;
 
 /**
  * Запрос параметров необходимых для валидации адреса.
